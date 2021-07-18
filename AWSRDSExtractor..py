@@ -10,8 +10,8 @@ LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
-YAML_FILE = "AWS_RDS.yaml"
-CSV_FILE = "aws_rds.csv"
+YAML_FILE = "AWS.RDS.yaml"
+CSV_FILE = "AWS.RDS.csv"
 
 CODE_MAP = {
     'EBSByteBalance%': 'ebs_byte_balance%',
