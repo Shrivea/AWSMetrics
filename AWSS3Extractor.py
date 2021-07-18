@@ -10,8 +10,8 @@ LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
-YAML_FILE = "AWS_S3.yaml"
-CSV_FILE = "aws_s3.csv"
+YAML_FILE = "AWS.S3.yaml"
+CSV_FILE = "AWS.S3.csv"
 
 
 class AWSS3Extractor:
@@ -84,7 +84,7 @@ class AWSS3Extractor:
             colone = var.findAll('td')
             coly = colone[0]
             ogmet = coly.text.strip()
-            met_name = 'aws.s3.'+self.snake_case(ogmet)
+            met_name = 'aws.s3.' + self.snake_case(ogmet)
             self.aws_dict['keys'].append(
                 {'name': met_name, 'alias': 'dimension_' + ogmet})
             colonetwo = colone[1]
@@ -105,50 +105,15 @@ class AWSS3Extractor:
                             met_desc = var2
                         elif var2.startswith(UNITS_):
                             met_units = var2
-                            met_units = met_units.replace(UNITS_,'').strip()
+                            met_units = met_units.replace(UNITS_, '').strip()
                             if met_units.lower() != 'counts':
 
                                 met_units = 'gauge'
                             else:
                                 met_units = 'count'
-                        idx = idx+1
-                        #if met_desc and met_units:
-                                #if met_name == 'aws.s3.bucket_used_bytes':
-                                    #print('processing', met_name)
+                        idx = idx + 1
 
                     self.add_to_list(self.aws_list, met_name, met_units, "", met_desc, )
-
-
-
-
-        '''matchthree = soup.find('table',id="w242aac17c23c15c27b5")id="w242aac17c23c15c27b5"
-        rowthree = matchthree.findAll('tr')
-        for k in rowthree[1:]:
-            columns = k.findAll('td')
-            colu = columns[0]
-            ometname = colu.text.strip()
-            newmetname = 'aws.s3.'+self.snake_case(ometname)
-            self.aws_dict['keys'].append(
-                {'name':newmetname, 'alias': 'dimension_' + ometname})
-            coli = columns[1]
-            s = coli.findChildren('p')
-
-            if s and len(s) > 0:
-                met_desc = ''
-                met_units = ''
-                idx = 0
-                if s:
-                    for a in s:
-                        descriptions = a.findAll(text=True)
-                        var7 = ' '.join(descriptions)
-                        var7 = var7.replace('\n', '')
-                        var8 = ' '.join(var7.split())
-                        # print(var2)
-                        if var8 and idx == 0:
-                            meta_desc = var8
-
-                        idx = idx + 1
-            self.add_to_list(self.aws_list, newmetname, "", "", meta_desc, )'''
 
     def generate_csv(self):
         with open(CSV_FILE, 'w', newline='') as f:
@@ -156,12 +121,10 @@ class AWSS3Extractor:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
 
-
     def generate_yaml(self):
         print(self.aws_dict)
         with open(YAML_FILE, 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
-
 
     @staticmethod
     def update_description(desc, value):
@@ -169,12 +132,10 @@ class AWSS3Extractor:
         desc = desc.replace('maximum', value)
         return desc
 
-
     @staticmethod
     def add_to_list(aws_list, metric_name, units, stats, description, ):
         print(metric_name, '||', units, '||', stats, '||', description, )
         aws_list.append([metric_name, units, "", "", "", description, "", "s3", "", ])
-
 
     @staticmethod
     def snake_case(input_string):
