@@ -1,0 +1,48 @@
+- keys:
+  - alias: dimension_VolumeReadBytes
+    name: aws.Ebs.volume_read_bytes
+  - alias: dimension_VolumeWriteBytes
+    name: aws.Ebs.volume_write_bytes
+  - alias: dimension_VolumeReadOps
+    name: aws.Ebs.volume_read_ops
+  - alias: dimension_VolumeWriteOps
+    name: aws.Ebs.volume_write_ops
+  - alias: dimension_VolumeTotalReadTime
+    name: aws.Ebs.volume_total_read_time
+  - alias: dimension_VolumeTotalWriteTime
+    name: aws.Ebs.volume_total_write_time
+  - alias: dimension_VolumeIdleTime
+    name: aws.Ebs.volume_idle_time
+  - alias: dimension_VolumeQueueLength
+    name: aws.Ebs.volume_queue_length
+  - alias: dimension_VolumeThroughputPercentage
+    name: aws.Ebs.volume_throughput_percentage
+  - alias: dimension_VolumeConsumedReadWriteOps
+    name: aws.Ebs.volume_consumed_read_write_ops
+  - alias: dimension_BurstBalance
+    name: aws.Ebs.burst_balance
+  - alias: dimension_FastSnapshotRestoreCreditsBucketSize
+    name: aws.Ebs.fast_snapshot_restore_credits_bucket_size
+  - alias: dimension_FastSnapshotRestoreCreditsBalance
+    name: aws.Ebs.fast_snapshot_restore_credits_balance
+  - alias: dimension_Read Bandwidth (KiB/s)
+    name: aws.Ebs.read _bandwidth (_ki_b/s)
+  - alias: dimension_Write Bandwidth (KiB/s)
+    name: aws.Ebs.write _bandwidth (_ki_b/s)
+  - alias: dimension_Read Throughput (IOPS)
+    name: 'aws.Ebs.read_throughput (iops) '
+  - alias: dimension_Write Throughput (IOPS)
+    name: 'aws.Ebs.write_throughput (iops) '
+  - alias: dimension_Avg Queue Length (Operations)
+    name: aws.Ebs.avg _queue _length (_operations)
+  - alias: dimension_% Time Spent Idle
+    name: aws.Ebs.% _time _spent _idle
+  - alias: dimension_Avg Read Size (KiB/Operation)
+    name: aws.Ebs.avg _read _size (_ki_b/_operation)
+  - alias: dimension_Avg Write Size (KiB/Operation)
+    name: aws.Ebs.avg _write _size (_ki_b/_operation)
+  - alias: dimension_Avg Read Latency (ms/Operation)
+    name: aws.Ebs.avg _read _latency (ms/_operation)
+  - alias: dimension_Avg Write Latency (ms/Operation)
+    name: aws.Ebs.avg _write _latency (ms/_operation)
+  type: ebs
