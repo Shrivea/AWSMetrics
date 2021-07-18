@@ -1,0 +1,56 @@
+- keys:
+  - alias: dimension_BinLogDiskUsage
+    name: bin_log_disk_usage
+  - alias: dimension_BurstBalance
+    name: burst_balance
+  - alias: dimension_CPUUtilization
+    name: c_p_u_utilization
+  - alias: dimension_CPUCreditUsage
+    name: c_p_u_credit_usage
+  - alias: dimension_CPUCreditBalance
+    name: c_p_u_credit_balance
+  - alias: dimension_DatabaseConnections
+    name: database_connections
+  - alias: dimension_DiskQueueDepth
+    name: disk_queue_depth
+  - alias: dimension_EBSByteBalance%
+    name: e_b_s_byte_balance%
+  - alias: dimension_EBSIOBalance%
+    name: e_b_s_i_o_balance%
+  - alias: dimension_FailedSQLServerAgentJobsCount
+    name: failed_s_q_l_server_agent_jobs_count
+  - alias: dimension_FreeableMemory
+    name: freeable_memory
+  - alias: dimension_FreeStorageSpace
+    name: free_storage_space
+  - alias: dimension_MaximumUsedTransactionIDs
+    name: maximum_used_transaction_i_ds
+  - alias: dimension_NetworkReceiveThroughput
+    name: network_receive_throughput
+  - alias: dimension_NetworkTransmitThroughput
+    name: network_transmit_throughput
+  - alias: dimension_OldestReplicationSlotLag
+    name: oldest_replication_slot_lag
+  - alias: dimension_ReadIOPS
+    name: read_i_o_p_s
+  - alias: dimension_ReadLatency
+    name: read_latency
+  - alias: dimension_ReadThroughput
+    name: read_throughput
+  - alias: dimension_ReplicaLag
+    name: replica_lag
+  - alias: dimension_ReplicationSlotDiskUsage
+    name: replication_slot_disk_usage
+  - alias: dimension_SwapUsage
+    name: swap_usage
+  - alias: dimension_TransactionLogsDiskUsage
+    name: transaction_logs_disk_usage
+  - alias: dimension_TransactionLogsGeneration
+    name: transaction_logs_generation
+  - alias: dimension_WriteIOPS
+    name: write_i_o_p_s
+  - alias: dimension_WriteLatency
+    name: write_latency
+  - alias: dimension_WriteThroughput
+    name: write_throughput
+  type: s3

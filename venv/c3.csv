@@ -1,0 +1,105 @@
+metric_name,Console_Name,Description,unit_name
+aws.rds.bin_log_disk_usage,Binary Log Disk Usage (MB),"The amount of disk space occupied by binary logs on the primary. Applies to MySQL
+                                                   read
+                                                   replicas.",Guage
+aws.rds.burst_balance,Burst Balance (Percent),The percent of General Purpose SSD (gp2) burst-bucket I/O credits available.,Guage
+aws.rds.c_p_u_utilization,CPU Utilization (Percent),The percentage of CPU utilization.,Guage
+aws.rds.c_p_u_credit_usage,CPU Credit Usage (Count),"(T2 instances) The number of CPU credits spent by the instance for CPU utilization.
+                                                   One CPU
+                                                   credit equals one vCPU running at 100 percent utilization for one minute or an equivalent
+                                                   combination of vCPUs, utilization, and time. For example, you might have one vCPU
+                                                   running at
+                                                   50 percent utilization for two minutes or two vCPUs running at 25 percent utilization
+                                                   for two
+                                                   minutes.
+                                                
+CPU credit metrics are available at a five-minute frequency only. If you specify a
+                                                   period
+                                                   greater than five minutes, use the Sum statistic instead of the
+                                                   Average statistic.",Guage
+aws.rds.c_p_u_credit_balance,CPU Credit Balance (Count),"(T2 instances) The number of earned CPU credits that an instance has accrued since
+                                                it was
+                                                launched or started. For T2 Standard, the CPUCreditBalance also includes the number
+                                                of launch credits that have been accrued.
+                                                Credits are accrued in the credit balance after
+                                                   they are earned, and removed from the credit balance when they are spent. The credit
+                                                   balance
+                                                   has a maximum limit, determined by the instance size. After the limit is reached,
+                                                   any new
+                                                   credits that are earned are discarded. For T2 Standard, launch credits don't count
+                                                   towards the limit.
+                                                
+The credits in the CPUCreditBalance are available
+                                                   for the instance to spend to burst beyond its baseline CPU utilization.
+                                                
+When an
+                                                   instance is running, credits in the CPUCreditBalance don't expire. When the
+                                                   instance stops, the CPUCreditBalance does not persist, and all accrued credits
+                                                   are lost.
+                                                
+CPU credit metrics are available at a five-minute frequency
+                                                   only.",Guage
+aws.rds.database_connections,DB Connections (Count),"The number of database connections in use.
+The metric value might not include broken database connections that haven't been
+                                                   cleaned up by your database yet. So, the number of database connections recorded by
+                                                   your
+                                                   database might be higher than the metric value.",Count
+aws.rds.disk_queue_depth,Queue Depth (Count),The number of outstanding I/Os (read/write requests) waiting to access the disk.,Count
+aws.rds.e_b_s_byte_balance%,EBS Byte Balance (percent),"The percentage of throughput credits remaining in the burst bucket of your RDS database.
+                                                   This metric is available for basic monitoring only. 
+                                                
+To find the instance sizes that support this metric, see the instance sizes with an
+                                                   asterisk (*) in the EBS optimized by default
+                                                   table in Amazon EC2 User Guide for Linux Instances. The Sum statistic is not
+                                                   applicable to this metric.",Guage
+aws.rds.e_b_s_i_o_balance%,EBS IO Balance (percent),"The percentage of I/O credits remaining in the burst bucket of your RDS database.
+                                                   This
+                                                   metric is available for basic monitoring only. 
+                                                
+To find the instance sizes that support this metric, see the instance sizes with an
+                                                   asterisk (*) in the EBS optimized by default
+                                                   table in Amazon EC2 User Guide for Linux Instances. The Sum statistic is not
+                                                   applicable to this metric.
+                                                
+This metric is different from BurstBalance. To learn how to use this metric,
+                                                   see Improving application performance and reducing costs with Amazon EBS-Optimized Instance
+                                                         burst capability.",Guage
+aws.rds.failed_s_q_l_server_agent_jobs_count,Failed SQL Server Agent Jobs Count (Count/Minute),The number of failed Microsoft SQL Server Agent jobs during the last minute.,Count/Minute
+aws.rds.freeable_memory,Freeable Memory (MB),"The amount of available random access memory.
+For MariaDB, MySQL, Oracle, and PostgreSQL DB instances, this metric
+                                                   reports the value of the MemAvailable field of
+                                                   /proc/meminfo.",Guage
+aws.rds.free_storage_space,Free Storage Space (MB/Second),The amount of available storage space.,Guage
+aws.rds.maximum_used_transaction_i_ds,Maximum Used Transaction IDs (Count),The maximum transaction IDs that have been used. Applies to PostgreSQL.,Count
+aws.rds.network_receive_throughput,Network Receive Throughput (MB/Second),"The incoming (receive) network traffic on the DB instance, including both customer
+                                                   database
+                                                   traffic and Amazon RDS traffic used for monitoring and replication.",Guage
+aws.rds.network_transmit_throughput,Network Transmit Throughput (MB/Second),"The outgoing (transmit) network traffic on the DB instance, including both customer
+                                                   database traffic and Amazon RDS traffic used for monitoring and replication.",Guage
+aws.rds.oldest_replication_slot_lag,Oldest Replication Slot Lag (MB),"The lagging size of the replica lagging the most in terms of write-ahead log (WAL)
+                                                   data
+                                                   received. Applies to PostgreSQL.",Guage
+aws.rds.read_i_o_p_s,Read IOPS (Count/Second),The average number of disk read I/O operations per second.,Count/Second
+aws.rds.read_latency,Read Latency (Milliseconds),The average amount of time taken per disk I/O operation.,Guage
+aws.rds.read_throughput,Read Throughput (MB/Second),The average number of bytes read from disk per second.,Guage
+aws.rds.replica_lag,Replica Lag (Milliseconds),"The amount of time a read replica DB instance lags behind the source DB instance.
+                                                   Applies
+                                                   to MySQL, MariaDB, Oracle, PostgreSQL, and SQL Server read replicas.",Guage
+aws.rds.replication_slot_disk_usage,Replica Slot Disk Usage (MB),The disk space used by replication slot files. Applies to PostgreSQL.,Guage
+aws.rds.swap_usage,Swap Usage (MB),"The amount of swap space used on the DB instance. This metric is not available for
+                                                   SQL
+                                                   Server.",Guage
+aws.rds.transaction_logs_disk_usage,Transaction Logs Disk Usage (MB),The disk space used by transaction logs. Applies to PostgreSQL.,Guage
+aws.rds.transaction_logs_generation,Transaction Logs Generation (MB/Second),The size of transaction logs generated per second. Applies to PostgreSQL.,Guage
+aws.rds.write_i_o_p_s,Write IOPS (Count/Second),The average number of disk write I/O operations per second.,Count/Second
+aws.rds.write_latency,Write Latency (Milliseconds),The average amount of time taken per disk I/O operation.,Guage
+aws.rds.write_throughput,Write Throughput (MB/Second),The average number of bytes written to disk per second.,Guage
+aws.s3.d_b_instance_identifier, ,a specific _d_b instance., 
+aws.s3.database_class, ,"all instances in a database class. _for example, you can aggregate metrics for all
+                                                   instances
+                                                   that belong to the database class db.r5.large.", 
+aws.s3.engine_name, ,"the identified engine name only. _for example, you can aggregate metrics for all instances
+                                                   that have the engine name mysql.", 
+aws.s3.source_region, ,"the specified _region only. _for example, you can aggregate metrics for all _d_b instances
+                                                   in
+                                                   the us-east-1 _region.", 
