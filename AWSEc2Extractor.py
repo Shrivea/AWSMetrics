@@ -98,9 +98,9 @@ class AWSEc2Extractor:
                     self.add_to_list(self.aws_list, metric_name, met_unit, met_desc)
 
                     if met_stats:
-                        self.add_to_list(self.aws_list, metric_name + "_min_", met_unit, met_desc + "_min_")
-                        self.add_to_list(self.aws_list, metric_name + "_max_", met_unit, met_desc + "_max_")
-                        self.add_to_list(self.aws_list, metric_name + "_avg_", met_unit, met_desc + "_avg")
+                        self.add_to_list(self.aws_list, metric_name + "_min", met_unit, met_desc + "_min")
+                        self.add_to_list(self.aws_list, metric_name + "_max", met_unit, met_desc + "_max")
+                        self.add_to_list(self.aws_list, metric_name + "_avg", met_unit, met_desc + "_avg")
 
                     # print(metric_name+" : ",met_desc," : "+met_unit)
 
@@ -143,6 +143,7 @@ class AWSEc2Extractor:
             if colstwo and len(colstwo) > 0:
                 met_desctwo = ''
                 met_units2 = ''
+                met_stats2 = ''
                 coltwo = colstwo[0]
                 ogmetrictwo_name = coltwo.text.strip()
                 metric_nametwo = 'aws.ec2.' + self.convertToSnakeCase(ogmetrictwo_name)
@@ -172,9 +173,16 @@ class AWSEc2Extractor:
                                 met_units2 = 'guage'
                             else:
                                 met_units2 = 'count'
+                        elif 'statistic' in vara:
+                            met_stats2 = vara
                         idx = idx + 1
 
                     self.add_to_list(self.aws_list, metric_nametwo, met_units2, met_desctwo)
+                    if met_stats2:
+                        self.add_to_list(self.aws_list, metric_nametwo + "_min", met_units2, met_desctwo + "_min")
+                        self.add_to_list(self.aws_list, metric_nametwo + "_max", met_units2, met_desctwo + "_max")
+                        self.add_to_list(self.aws_list, metric_nametwo + "_avg", met_units2, met_desctwo + "_avg")
+
 
         for w in tablethreerows:
             colsfour = w.findAll('td')
@@ -246,11 +254,11 @@ class AWSEc2Extractor:
                         idx + idx + 1
                     self.add_to_list(self.aws_list, metric_namefive, met_unitonefive, met_desconefive)
                     if met_statsone:
-                        self.add_to_list(self.aws_list, metric_namefive + "_min_", met_unitonefive,
-                                         met_desconefive + "_min_")
-                        self.add_to_list(self.aws_list, metric_namefive + "_max_", met_unitonefive,
-                                         met_desconefive + "_max_")
-                        self.add_to_list(self.aws_list, metric_namefive + "_avg_", met_unitonefive,
+                        self.add_to_list(self.aws_list, metric_namefive + "_min", met_unitonefive,
+                                         met_desconefive + "_min")
+                        self.add_to_list(self.aws_list, metric_namefive + "_max", met_unitonefive,
+                                         met_desconefive + "_max")
+                        self.add_to_list(self.aws_list, metric_namefive + "_avg", met_unitonefive,
                                          met_desconefive + "_avg")
         for d in table5[1:]:
             colssix = d.findAll('td')
@@ -280,11 +288,11 @@ class AWSEc2Extractor:
                     idx + idx + 1
                 self.add_to_list(self.aws_list, metric_namesix, met_unitonesix, met_desconesix)
                 if met_statsonesix:
-                    self.add_to_list(self.aws_list, metric_namesix + "_min_", met_unitonesix,
-                                     met_desconefive + "_min_")
-                    self.add_to_list(self.aws_list, metric_namesix + "_max_", met_unitonesix,
-                                     met_desconefive + "_max_")
-                    self.add_to_list(self.aws_list, metric_namesix + "_avg_", met_unitonesix,
+                    self.add_to_list(self.aws_list, metric_namesix + "_min", met_unitonesix,
+                                     met_desconefive + "_min")
+                    self.add_to_list(self.aws_list, metric_namesix + "_max", met_unitonesix,
+                                     met_desconefive + "_max")
+                    self.add_to_list(self.aws_list, metric_namesix + "_avg", met_unitonesix,
                                      met_desconefive + "_avg")
 
     def generate_csv(self):
