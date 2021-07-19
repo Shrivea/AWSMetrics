@@ -7,10 +7,26 @@ import yaml
 
 res = requests.get('https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html')
 UNITS_ = 'Units:'
-CSV_FILE = 'aws.ec@.csv'
-YAML_File = 'AWS_ELB.yaml'
+CSV_FILE = 'AWS.EC2.csv'
+YAML_File = 'AWS.EC2.yaml'
 METRIC_HEADERS = ['metric_name', 'metric_unit', 'description']
 lineadder = ['Minimum', 'Maximum', 'Average']
+
+CODE_MAP = {
+    'CPUUtilization': 'aws.ec2.cpu_utilization',
+    'EBSIOBalance%': 'aws.ec2.ebs_io_balance%',
+    'CPUCreditUsage': 'aws.ec2.cpu_credit_usage',
+    'CPUCreditBalance': 'aws.ec2.cpu_credit_balance',
+    'CPUSurplusCreditBalance': 'aws.ec2.cpu_surplus_credit_balance',
+    'CPUSurplusCreditsCharged': 'aws.ec2.cpu_surplus_credits_charged',
+    'EBSReadOps': 'aws.ec2.ebs_read_ops',
+    'EBSWriteOps': 'aws.ec2.ebs_write_ops',
+    'EBSWriteBytes': 'aws.ec2.ebs_write_bytes',
+    'EBSReadBytes': 'aws.ec2.ebs_read_bytes',
+    'EBSIobalance%': 'aws.ec2.ebs_iobalance%',
+    'EBSBytesbalance%': 'aws.ec2.ebs_byte_balance%'
+}
+
 
 
 class AWSEc2Extractor:
@@ -48,12 +64,14 @@ class AWSEc2Extractor:
             if cols and len(cols) > 0:
                 col = cols[0]
                 ogmetric_name = col.text.strip()
-                metric_name = 'aws.ec2_' + self.convertToSnakeCase(ogmetric_name)
+                metric_name = 'aws.ec2.' + self.convertToSnakeCase(ogmetric_name)
                 met_desc = ''
                 met_unit = ''
                 met_stats = ''
                 if metric_name.startswith('cpu'):  # redo this
                     metric_name = metric_name.replace('cpu', 'cpu_')  # redo this
+                if ogmetric_name in CODE_MAP.keys():
+                    metric_name= CODE_MAP[ogmetric_name]
                 coloftone = cols[1]
                 secon = coloftone.findChildren('p')
                 if secon and len(secon) > 0:
@@ -68,6 +86,10 @@ class AWSEc2Extractor:
                             met_desc = var2
                         elif var2.startswith('Units'):
                             met_unit = var2
+                            if 'Count' not in met_unit:
+                                met_unit = 'guage'
+                            else:
+                                met_unit = 'count'
                         elif var2.startswith('Statistics'):
                             met_stats = var2
                         else:
@@ -90,11 +112,11 @@ class AWSEc2Extractor:
                 met_descone = ''
                 colthree = colsthree[0]
                 ogmetricthree_name = colthree.text.strip()
-                metric_namethree = 'aws.ec2_' + self.convertToSnakeCase(ogmetricthree_name)
-                if metric_namethree.startswith('cpu'):  # redo this
-                    metric_namethree = metric_namethree.replace('cpu', 'cpu_')  # redo this
+                metric_namethree = 'aws.ec2.' + self.convertToSnakeCase(ogmetricthree_name) # redo this
                     # print(metric_namethree)
                 # print(metric_namethree)
+                if ogmetricthree_name in CODE_MAP.keys():
+                    metric_namethree = CODE_MAP[ogmetricthree_name]
                 coloftthree = colsthree[1]
                 seconthree = coloftthree.findChildren('p')
                 if seconthree and len(seconthree) > 0:
@@ -109,6 +131,10 @@ class AWSEc2Extractor:
                             met_descone = vary
                         elif vary.startswith('Units'):
                             met_unitone = vary
+                            if 'Count' not in met_unitone:
+                                met_unitone = 'guage'
+                            else:
+                                met_unitone = 'count'
                         idx + idx + 1
                     self.add_to_list(self.aws_list, metric_namethree, met_unitone, met_descone)
 
@@ -119,9 +145,13 @@ class AWSEc2Extractor:
                 met_units2 = ''
                 coltwo = colstwo[0]
                 ogmetrictwo_name = coltwo.text.strip()
-                metric_nametwo = 'aws.ec2_' + self.convertToSnakeCase(ogmetrictwo_name)
-                if metric_nametwo.startswith('aws.ec2_cpu'):  # redo this
-                    metric_nametwo = metric_nametwo.replace('aws.ec2cpu', 'cpu_')  # redo this
+                metric_nametwo = 'aws.ec2.' + self.convertToSnakeCase(ogmetrictwo_name)
+                #print(CODE_MAP.keys())
+                #print(ogmetrictwo_name)
+                #break
+                if ogmetrictwo_name in CODE_MAP.keys():
+
+                    metric_nametwo = CODE_MAP[ogmetrictwo_name]
                 # print(metric_nametwo)
                 colofttwo = colstwo[1]
                 secontwo = colofttwo.findChildren('p')
@@ -138,6 +168,10 @@ class AWSEc2Extractor:
                             met_desctwo = vara
                         elif vara.startswith('Units'):
                             met_units2 = vara
+                            if 'Count' not in met_units2:
+                                met_units2 = 'guage'
+                            else:
+                                met_units2 = 'count'
                         idx = idx + 1
 
                     self.add_to_list(self.aws_list, metric_nametwo, met_units2, met_desctwo)
@@ -149,10 +183,12 @@ class AWSEc2Extractor:
                 met_unitone4 = ''
                 colfour = colsfour[0]
                 ogmetricfour_name = colfour.text.strip()
-                metric_namefour = 'aws.ec2_' + self.convertToSnakeCase(ogmetricfour_name)
+                metric_namefour = 'aws.ec2.' + self.convertToSnakeCase(ogmetricfour_name)
                 if metric_namefour.startswith('cpu'):  # redo this
                     metric_namefour = metric_namefour.replace('cpu', 'cpu_')  # redo this
                 # print(metric_namefour)
+                if ogmetricfour_name in CODE_MAP.keys():
+                    metric_namefour = CODE_MAP[ogmetricfour_name]
                 colofour = colsfour[1]
                 secon4 = colofour.findChildren('p')
                 if secon4 and len(secon4) > 0:
@@ -167,6 +203,10 @@ class AWSEc2Extractor:
                             met_descone4 = vart
                         elif vart.startswith('Units'):
                             met_unitone4 = vart
+                            if 'Count' not in met_unitone4:
+                                met_unitone4 = 'guage'
+                            else:
+                                met_unitone4 = 'count'
                         idx + idx + 1
                     self.add_to_list(self.aws_list, metric_namefour, met_unitone4, met_descone4)
         for s in tablefourrows:
@@ -177,9 +217,11 @@ class AWSEc2Extractor:
                 met_statsone = ''
                 colfive = colsfive[0]
                 ogmetricfive_name = colfive.text.strip()
-                metric_namefive = 'aws.ec2_' + self.convertToSnakeCase(ogmetricfive_name)
+                metric_namefive = 'aws.ec2.' + self.convertToSnakeCase(ogmetricfive_name)
                 if metric_namefive.startswith('cpu'):  # redo this
                     metric_namefive = metric_namefive.replace('cpu', 'cpu_')  # redo this
+                if ogmetricfive_name in CODE_MAP.keys():
+                    metric_namefive = CODE_MAP[ogmetricfive_name]
                 # print(metric_namefive)
                 coloftfive = colsfive[1]
                 seconfive = coloftfive.findChildren('p')
@@ -195,6 +237,10 @@ class AWSEc2Extractor:
                             met_desconefive = varr
                         elif varr.startswith('Units'):
                             met_unitonefive = varr
+                            if 'Count' not in met_unitonefive:
+                                met_unitonefive = 'guage'
+                            else:
+                                met_unitonefive = 'count'
                         elif 'statistics' in varr:
                             met_statsone = varr
                         idx + idx + 1
@@ -214,7 +260,7 @@ class AWSEc2Extractor:
                 met_unitonesix = ''
             colsix = colssix[0]
             ogmetricsix_name = colsix.text.strip()
-            metric_namesix = 'aws.ec2_' + self.convertToSnakeCase(ogmetricsix_name)
+            metric_namesix = 'aws.ec2.' + self.convertToSnakeCase(ogmetricsix_name)
             coloftsix = colssix[1]
             seconsix = coloftsix.findChildren('p')
             if seconsix and len(seconsix) > 0:
@@ -250,7 +296,7 @@ class AWSEc2Extractor:
 
     def generate_yaml(self):
 
-        print(self.aws_dict)
+        #print(self.aws_dict)
         with open('AWS_ELB.yaml', 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
 
@@ -278,5 +324,6 @@ if __name__ == "__main__":
     extractor = AWSEc2Extractor('https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-dimensions.html')
     extractor.load_page()
     extractor.process_content()
-    '''extractor.generate_yaml()'''
+    extractor.generate_yaml()
     extractor.generate_csv()
+
