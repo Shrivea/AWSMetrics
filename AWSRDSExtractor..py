@@ -65,7 +65,8 @@ class AWSRDSExtractor:
                 if 'instances' not in colsconsole:
                     metric_console_name = colsconsole.text.strip()
                 colsdesc = cols[2]
-                metric_desc = colsdesc.text.strip()
+                metric_desc = colsdesc.text.strip().replace('\n','').replace('\t','').split()
+                metric_desc = self.listToString(metric_desc)
                 metric_units = cols[3].text.strip()
                 if 'Count' not in metric_units:
                     metric_units = 'guage'
@@ -97,7 +98,14 @@ class AWSRDSExtractor:
             return re.sub(r'(?<!^)(?=[A-Z])', '_', input_string).lower()
         else:
             return input_string
+    @staticmethod
+    def listToString(s):
 
+    # initialize an empty string
+        str1 = " "
+
+    # return string
+        return (str1.join(s))
 
 if __name__ == "__main__":
     extractor = AWSRDSExtractor('https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/monitoring-cloudwatch.html')
