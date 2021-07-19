@@ -9,14 +9,24 @@ VALID_STATISTICS_ = 'Valid statistics:'
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 CODE_MAP = {
 
-    'Read Throughput (IOPS)': 'read_throughput (iops) ',
-    'Write Throughput (IOPS)': 'write_throughput (iops) '
+    'Read Throughput (IOPS)': 'read_throughput(iops)',
+    'Write Throughput (IOPS)': 'write_throughput(iops)',
+    'Avg Read Latency (ms/Operation)':'avg_read_latency_(ms/operation)',
+    'Read Bandwidth (KiB/s)':'read_bandwith_(kib/s)',
+    'Write Bandwidth (KiB/s)':'write_bandwith_(kib/s)',
+    'Avg Write Latency (ms/Operation)':'avg_write_latency_(ms/operation)',
+    'Avg Queue Length (Operations)':'aws_queue_length_(operations)',
+    '% Time Spent Idle':'%_time_spent_idle',
+    'Avg Read Size (KiB/Operation)':'avg_read_size_(kib/operation)',
+    'Avg Write Size (KiB/Operation)':'avg_write_size_(kib/operation)'
+
+
 }
 
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
-YAML_FILE = "AWS_EBS.yaml"
-CSV_FILE = "aws_ebs.csv"
+YAML_FILE = "AWS.EBS.yaml"
+CSV_FILE = "AWS.EBS.csv"
 
 
 class AWSEBSExtractor:
@@ -58,7 +68,7 @@ class AWSEBSExtractor:
             cols = table.findAll('td')
             col = cols[0]
             original_metric_name = col.text.strip()
-            metric_name = 'aws.Ebs.' + self.snake_case(col.text.strip())
+            metric_name = 'aws.ebs.' + self.snake_case(col.text.strip())
             if original_metric_name in CODE_MAP.keys():
                 metric_name = CODE_MAP[original_metric_name]
             # if metric_name ==
@@ -87,9 +97,9 @@ class AWSEBSExtractor:
                             metric_units = 'count'
                     idx = idx + 1
                 self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
-                self.add_to_list(self.aws_list, metric_name + "_min_", metric_units, metric_desc + "_min_")
-                self.add_to_list(self.aws_list, metric_name + "_max_", metric_units, metric_desc + "_max_")
-                self.add_to_list(self.aws_list, metric_name + "_avg_", metric_units, metric_desc + "_avg_")
+                self.add_to_list(self.aws_list, metric_name + "_min", metric_units, metric_desc + "_min")
+                self.add_to_list(self.aws_list, metric_name + "_max", metric_units, metric_desc + "_max")
+                self.add_to_list(self.aws_list, metric_name + "_avg", metric_units, metric_desc + "_avg")
 
         rowone = main_content[1].findAll('tr')
 
@@ -99,7 +109,7 @@ class AWSEBSExtractor:
             colone = x.findAll('td')
             cole = colone[0]
             ogmetricname = cole.text.strip()
-            metricnameone = 'aws.Ebs.' + self.snake_case(cole.text.strip())
+            metricnameone = 'aws.ebs.' + self.snake_case(cole.text.strip())
             self.aws_dict['keys'].append(
                 {'name': metricnameone, 'alias': 'dimension_' + ogmetricname})
             # print(metricnameone)
@@ -113,9 +123,9 @@ class AWSEBSExtractor:
                     var16 = ' '.join(var10.split())
                     metricdescone = var16
                 self.add_to_list(self.aws_list, metricnameone, "", metricdescone)
-                self.add_to_list(self.aws_list, metricnameone + "_min_", "", metricdescone + "_min_")
-                self.add_to_list(self.aws_list, metricnameone + "_max_", "", metricdescone + "_max_")
-                self.add_to_list(self.aws_list, metricnameone + "_avg_", "", metricdescone + "_avg_")
+                self.add_to_list(self.aws_list, metricnameone + "_min", "", metricdescone + "_min")
+                self.add_to_list(self.aws_list, metricnameone + "_max", "", metricdescone + "_max")
+                self.add_to_list(self.aws_list, metricnameone + "_avg", "", metricdescone + "_avg")
         rowtwo = main_content[2].findAll('tr')
         for j in rowtwo[1:]:
             metricnameoneone = ''
@@ -123,11 +133,11 @@ class AWSEBSExtractor:
             coloneone = j.findAll('td')
             coless = coloneone[0]
             ogonemetricname = coless.text.strip()
-            metricnameoneone = 'aws.Ebs.' + self.snake_case(coless.text.strip())
+            metricnameoneone = 'aws.ebs.' + self.snake_case(coless.text.strip())
             if ogonemetricname in CODE_MAP.keys():
-                metricnameoneone = 'aws.Ebs.'+CODE_MAP[ogonemetricname]
+                metricnameoneone = 'aws.ebs.' + CODE_MAP[ogonemetricname]
             self.aws_dict['keys'].append(
-                {'name': metricnameoneone, 'alias': 'dimension_' + ogonemetricname})
+                {'name': metricnameoneone,'alias': 'dimension_' + ogonemetricname})
             # print(metricnameone)
             colesthree = coloneone[1]
             sectiononetwo = colesthree.findChildren('p')
@@ -137,9 +147,9 @@ class AWSEBSExtractor:
             var6 = ' '.join(var5.split())
             metricdesconeone = var6
             self.add_to_list(self.aws_list, metricnameoneone, "", metricdesconeone)
-            self.add_to_list(self.aws_list, metricnameoneone + "_min_", "", metricdesconeone + "_min_")
-            self.add_to_list(self.aws_list, metricnameoneone + "_max_", "", metricdesconeone + "_max_")
-            self.add_to_list(self.aws_list, metricnameoneone + "_avg_", "", metricdesconeone + "_avg_")
+            self.add_to_list(self.aws_list, metricnameoneone + "_min", "", metricdesconeone + "_min")
+            self.add_to_list(self.aws_list, metricnameoneone + "_max", "", metricdesconeone + "_max")
+            self.add_to_list(self.aws_list, metricnameoneone + "_avg", "", metricdesconeone + "_avg")
 
     def generate_csv(self):
         with open(CSV_FILE, 'w', newline='') as f:
@@ -151,12 +161,6 @@ class AWSEBSExtractor:
         print(self.aws_dict)
         with open(YAML_FILE, 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
-
-    # @staticmethod
-    '''def update_description(desc, value):
-        desc = desc.replace('per-request', value + ' per-request')
-        desc = desc.replace('maximum', value)
-        return desc'''
 
     @staticmethod
     def add_to_list(aws_list, metric_name, metric_type, description):
