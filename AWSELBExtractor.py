@@ -8,18 +8,18 @@ UNITS_ = 'Units:'
 VALID_STATISTICS_ = 'Valid statistics:'
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 
-METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
-                  "integration", "short_name", ]
+METRIC_HEADERS = ["metric_name", "metric Stats"]
 YAML_FILE = "AWS.ELB.yaml"
 CSV_FILE = "AWS.ELB.csv"
+CSV2 = "AWS.Elb(2).csv"
 CODE_MAP = {
     'DesyncMitigationMode_NonCompliant_Request_Count': 'desync_mitigation_mode_non_compliant_request_count',
     'aws.elbdesync_mitigation_mode__non_compliant__request__count': 'aws.elbdesync_mitigation_mode_non_compliant_request_count',
     'HTTPCode_ELB_4xx': 'http_code_elb_4xx',
     'HTTPCode_ELB_5xx': 'http_code_elb_xx',
-    'EstimatedALBActiveConnectionCount': 'estimated_alb_active_connection_count',
-    'EstimatedALBConsumedLCUs': 'estimated_alb_consumed_lcus',
-    'EstimatedALBNewConnectionCount': 'estimated_alb_new_connection_count',
+    'EstimatedALBActiveConnectionCount': 'aws.elb.estimated_alb_active_connection_count',
+    'EstimatedALBConsumedLCUs': 'aws.elb.estimated_alb_consumed_lcus',
+    'EstimatedALBNewConnectionCount': 'aws.elb.estimated_alb_new_connection_count',
     'HTTPCode_Backend_2XX,                                                   HTTPCode_Backend_3XX,                                                   HTTPCode_Backend_4XX,                                                   HTTPCode_Backend_5XX'
     : 'http_code_backend_2xx_http_code_backend_3xx_http_code_backend_4xx_http_code_backend_5xx'
 
@@ -32,6 +32,7 @@ class AWSS3Extractor:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_list2 = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -61,9 +62,9 @@ class AWSS3Extractor:
             originalmetricname = col.text.strip().replace('\n', '')
             metric_name = 'aws.elb.' + self.snake_case(originalmetricname)
             originalmetricname = originalmetricname.replace('\t', '')
+            self.aws_list2.append([originalmetricname])
 
-            if allChildren and len(allChildren)   > 1 :
-                print("JEJEJJE")
+            if allChildren and len(allChildren)> 1 :
                 #  print(allChildren[2])
                 var11 = ' '.join(allChildren)
                 var11 = var11.replace('\n', '')
@@ -82,10 +83,6 @@ class AWSS3Extractor:
                 secondString = thirdString.replace(' ','')
                 thirdString = fourthString.replace(' ','')
 
-                print(firstString)
-                print(secondString)
-                print(thirdString)
-                print(fourthString)
                 stringsArray = ['aws.elb.'+firstString.lower() ,'aws.elb.'+secondString.lower(),'aws.elb.'+thirdString.lower() ,'aws.elb.'+fourthString.lower()]
                 for op in stringsArray:
                     sections = colone.findChildren('p')
@@ -102,7 +99,7 @@ class AWSS3Extractor:
                     self.add_to_list(self.aws_list, op + "_min", metric_desc + "_min")
                     self.add_to_list(self.aws_list, op + "_max", metric_desc + "_max")
                     self.add_to_list(self.aws_list, op + "_avg", metric_desc + "_avg")
-                    self.aws_dict['keys'].append({'name': self.snake_case(op), 'alias': 'dimension_' + op})
+
 
             else:
                 if originalmetricname in CODE_MAP.keys():
@@ -111,8 +108,6 @@ class AWSS3Extractor:
                     metric_name = str('aws.elb.' + 'http_code_elb_4xx')
                 if metric_name == 'aws.elb.h_t_t_p_code__e_l_b_5_x_x':
                     metric_name = str('aws.elb.' + 'http_code_elb_5xx')
-                self.aws_dict['keys'].append(
-                    {'name': metric_name, 'alias': 'dimension_' + originalmetricname})
                 colone = cols[1]
                 sections = colone.findChildren('p')
                 if sections and len(sections) > 0:
@@ -143,12 +138,11 @@ class AWSS3Extractor:
             col = cols[0]
             colone = cols[1]
             coltext = col.text.strip()
-            met_name = 'aws.elb' + self.snake_case(col.text.strip())
+            self.aws_list2.append([coltext])
+            met_name = 'aws.elb.' + self.snake_case(col.text.strip())
             if coltext in CODE_MAP.keys():
                 met_name = CODE_MAP[coltext]
-            self.aws_dict['keys'].append(
-                {'name': met_name, 'alias': 'dimension_' + coltext})
-            # print(met_name)
+
             met_desc = (colone.text.strip())
             # print(met_desc)
             self.add_to_list(self.aws_list, met_name, met_desc)
@@ -158,7 +152,7 @@ class AWSS3Extractor:
             colson = l.findAll('td')
             coly = colson[0]
             colones = colson[1]
-            met_nameone = 'aws.elb' + self.snake_case(coly.text.strip())
+            met_nameone = 'aws.elb.' + self.snake_case(coly.text.strip())
             if coly in CODE_MAP.keys():
                 met_nameone = CODE_MAP[coly]
             self.aws_dict['keys'].append(
@@ -166,7 +160,7 @@ class AWSS3Extractor:
             # print(met_name)
             met_descone = (colone.text.strip())
             # print(met_desc)
-            self.add_to_list(self.aws_list, met_nameone, met_descone)
+
 
 
     def generate_csv(self):
@@ -174,6 +168,12 @@ class AWSS3Extractor:
             writer = csv.writer(f)
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
+
+    def generate_csv2(self):
+        with open(CSV2, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(METRIC_HEADERS)
+            writer.writerows(self.aws_list2)
 
     def generate_yaml(self):
         # print(self.aws_dict)
@@ -188,7 +188,7 @@ class AWSS3Extractor:
 
     @staticmethod
     def add_to_list(aws_list, metric_name, description):
-        # print(metric_name, "||", description, )
+        print(metric_name, "||", description, )
         aws_list.append([metric_name, "", "", "", "", description, "", "elb", ""])
 
     @staticmethod
@@ -206,3 +206,4 @@ if __name__ == "__main__":
     extractor.process_content()
     extractor.generate_yaml()
     extractor.generate_csv()
+    extractor.generate_csv2()

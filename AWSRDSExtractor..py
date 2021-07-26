@@ -10,8 +10,10 @@ LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
-YAML_FILE = "AWS.RDS.yaml"
-CSV_FILE = "AWS.RDS.csv"
+mn = ["Metric Name","metric stats"]
+YAML_FILE = "AWS_RDS.yaml"
+CSV_FILE = "aws_rds.csv"
+CSV2 = "AWS_RDS2.csv"
 
 CODE_MAP = {
     'EBSByteBalance%': 'ebs_byte_balance%',
@@ -31,6 +33,7 @@ class AWSRDSExtractor:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_listtwo = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -44,17 +47,22 @@ class AWSRDSExtractor:
         soup = BeautifulSoup(self.content, 'html.parser')
         main_content = soup.find('div', {'id': 'main-content'})
         rows = main_content.findAll('tr')
+        mate = soup.findAll('table')
+        mat = mate[1].findAll('tr')
         metric_name = ''
         metric_units = ''
         metric_desc = ''
         metric_console_name = ''
         self.aws_dict = {'type': 'rds', 'keys': []}
+        self.aws_dictone = {'type': 'rds', 'keys': []}
         self.aws_list = []
         for row in rows:
             cols = row.findAll('td')
             if cols and len(cols) == 4:
                 col = cols[0]
                 original_metric_name = col.text.strip()
+                self.add_to_list2(self.aws_listtwo,original_metric_name)
+                print(original_metric_name)
                 metric_name_snake_case = self.snake_case(original_metric_name)
                 if original_metric_name in CODE_MAP.keys():
                     metric_name_snake_case = CODE_MAP[original_metric_name]
@@ -65,8 +73,7 @@ class AWSRDSExtractor:
                 if 'instances' not in colsconsole:
                     metric_console_name = colsconsole.text.strip()
                 colsdesc = cols[2]
-                metric_desc = colsdesc.text.strip().replace('\n','').replace('\t','').split()
-                metric_desc = self.listToString(metric_desc)
+                metric_desc = colsdesc.text.strip()
                 metric_units = cols[3].text.strip()
                 if 'Count' not in metric_units:
                     metric_units = 'guage'
@@ -75,12 +82,25 @@ class AWSRDSExtractor:
                 else:
                     metric_units = 'count'
                 self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
+        for h in mat[1:]:
+            colv = h.findAll('td')
+            codv = colv[0].find('code')
+            print(codv.text.strip())
+            '''self.aws_dict['keys'].append(
+                {'name': metseven, 'alias': 'dimension_' + co.text.strip()})'''
 
     def generate_csv(self):
         with open(CSV_FILE, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
+    def generate_csv2(self):
+        with open(CSV2, 'w', newline='') as f:
+            write = csv.writer(f)
+            write.writerow(mn)
+            write.writerows(self.aws_listtwo)
+
+
 
     def generate_yaml(self):
         print(self.aws_dict)
@@ -89,8 +109,13 @@ class AWSRDSExtractor:
 
     @staticmethod
     def add_to_list(aws_list, metric_name, metric_type, description, ):
-        print(metric_name, '||', metric_type, "||", description, )
+        #print(metric_name, '||', metric_type, "||", description, )
         aws_list.append([metric_name, metric_type, "", "", "", description, "", "rds", ""])
+
+    @staticmethod
+    def add_to_list2(aws_list, metric_name,):
+        # print(metric_name, '||', metric_type, "||", description, )
+        aws_list.append([metric_name])
 
     @staticmethod
     def snake_case(input_string):
@@ -98,14 +123,7 @@ class AWSRDSExtractor:
             return re.sub(r'(?<!^)(?=[A-Z])', '_', input_string).lower()
         else:
             return input_string
-    @staticmethod
-    def listToString(s):
 
-    # initialize an empty string
-        str1 = " "
-
-    # return string
-        return (str1.join(s))
 
 if __name__ == "__main__":
     extractor = AWSRDSExtractor('https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/monitoring-cloudwatch.html')
@@ -113,3 +131,4 @@ if __name__ == "__main__":
     extractor.process_content()
     extractor.generate_yaml()
     extractor.generate_csv()
+    extractor.generate_csv2()
