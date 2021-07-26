@@ -1,0 +1,27 @@
+metric_name,metric stats
+BucketSizeBytes,Average
+NumberOfObjects,Average
+AllRequests,Sum
+GetRequests,Sum
+PutRequests,Sum
+DeleteRequests,Sum
+HeadRequests,Sum
+PostRequests,Sum
+SelectRequests,Sum
+SelectBytesScanned,"Average (bytes per request), Sum (bytes per period), Sample Count, Min, Max (same as p100), any percentile between p0.0 and p99.9"
+SelectBytesReturned,"Average (bytes per request), Sum (bytes per period), Sample Count, Min, Max (same as p100), any percentile between p0.0 and p99.9"
+ListRequests,Sum
+BytesDownloaded,"Average (bytes per request), Sum (bytes per period), Sample Count, Min, Max (same as p100), any percentile between p0.0 and p99.9"
+BytesUploaded,"Average (bytes per request), Sum (bytes per period), Sample Count, Min, Max (same as p100), any percentile between p0.0 and p99.9"
+4xxErrors,"Average (reports per request), Sum (reports per period), Min, Max, Sample Count"
+5xxErrors,"Average (reports per request), Sum (reports per period), Min, Max, Sample Count"
+FirstByteLatency,"Average, Sum, Min, Max(same as p100), Sample Count, any percentile between p0.0 and p100"
+TotalRequestLatency,"Average, Sum, Min, Max(same as p100), Sample Count, any percentile between p0.0 and p100"
+ReplicationLatency,Max
+BytesPendingReplication,Max
+OperationsPendingReplication,Max
+OutpostTotalBytes,
+OutpostFreeBytes,
+BucketUsedBytes,
+BucketName,
+StorageType,
